@@ -1,43 +1,66 @@
-# Blueprint da Aplicação de Ponto Eletrônico
+# Blueprint do Projeto PONTO-SISTEMAS
 
 ## Visão Geral
 
-O objetivo deste projeto é criar um sistema de ponto eletrônico flexível, moderno e eficiente, utilizando Next.js e Firebase. A aplicação permite que usuários registrem seus horários de trabalho manualmente através de um calendário, com cálculo automatizado de horas normais, horas extras e banco de horas, com base em regras de negócio predefinidas.
+O PONTO-SISTEMAS é uma aplicação web construída com Next.js e Firebase, projetada para fornecer um sistema de ponto eletrônico para empresas. A aplicação permite que os funcionários registrem seus pontos de entrada e saída, e que os administradores gerenciem os registros e usuários.
 
----
+## Design e Estilo
 
-## Funcionalidades e Design Implementados
+- **Framework UI:** Tailwind CSS
+- **Componentes:** Headless UI e componentes personalizados em `components/`
+- **Estilo Visual:** Moderno e limpo, com um tema escuro predominante (`bg-slate-950`). Usa gradientes e efeitos de blur para um visual mais sofisticado. Paleta de cores focada em roxo e azul.
+- **Responsividade:** O layout é projetado para ser responsivo e funcionar bem em dispositivos móveis e desktops.
 
-### v1.0 - Estrutura, Autenticação e Gestão de Usuários
-*   **Autenticação Segura:** Login com email/senha e gerenciamento de sessão com cookies HTTP-only.
-*   **Painel de Administração (`/admin`):** Interface para administradores visualizarem, atualizarem e excluírem usuários.
-*   **Estrutura do Projeto:** Configuração inicial com Next.js (App Router), TypeScript e Firebase Admin SDK.
+## Funcionalidades Implementadas
 
-### v2.0 - Dashboard Interativo com Calendário
-*   **Interface Centrada no Calendário:** O dashboard foi redesenhado para ter o `react-calendar` como elemento central.
-*   **Modal de Registro/Edição:** Um modal é aberto ao clicar em um dia, pré-preenchendo dados existentes ou preparando um novo registro.
-*   **Estilo Visual Coeso:** O calendário e todos os componentes foram estilizados para se integrarem ao tema escuro da aplicação.
-*   **Correção de Fuso Horário:** A lógica de registro de ponto foi ajustada para lidar corretamente com fusos horários, garantindo que os horários sejam salvos e exibidos com precisão.
+### Autenticação
 
-### v3.0 - Refatoração do Layout e Regras de Almoço
-*   **Componente de Cabeçalho (`Header.tsx`):** Criação de um novo componente para a barra de navegação superior, simplificando a interface.
-*   **Regra de Almoço Simplificada:** Para qualquer dia trabalhado, será automaticamente deduzida 1 hora de almoço se a duração total do trabalho for superior a 4 horas.
+- **Fluxo de Autenticação:** A autenticação é gerenciada pelo Firebase, usando um fluxo híbrido (cliente/servidor).
+  1. **Lado do Cliente (Client-side):** O login (email/senha e Google) e o registro acontecem no navegador usando o SDK do Firebase (`firebase/auth`).
+  2. **Geração de Token:** Após a autenticação bem-sucedida no cliente, um `idToken` do Firebase é gerado.
+  3. **Criação de Sessão (Server-side):** O `idToken` é enviado para a API do Next.js no endpoint `/api/auth/session`.
+  4. **Cookie de Sessão:** O servidor valida o `idToken` usando o Firebase Admin SDK, cria um cookie de sessão (`__session`) seguro e `HttpOnly`, e o armazena no navegador do usuário. Isso estabelece uma sessão persistente e segura.
+- **Provedores de Autenticação:**
+  - Email e Senha
+  - Google
+- **Gerenciamento de Usuários:**
+  - Os dados dos usuários (UID, email, nome, `isAdmin`) são armazenados na coleção `users` do Firestore.
+  - A criação de novos usuários no Firestore acontece automaticamente no primeiro login.
 
-### v4.0 - Sistema de Banco de Horas e Formato Centesimal
-*   **Banco de Horas:**
-    *   **Débito (Sair Cedo):** Qualquer tempo faltante na jornada de 8 horas, mesmo que fracionado, é registrado como um valor negativo no banco de horas.
-    *   **Crédito (Ficar a Mais):** O tempo excedente só é computado como "Hora Extra" a cada hora completa. Frações de tempo são desconsideradas.
-*   **Representação Centesimal:** Todos os valores de horas são exibidos no formato centesimal (ex: 7 horas e 30 minutos é mostrado como `7.30h`).
-*   **Arredondamento em Feriados/Fins de Semana:** Ao registrar um ponto em um feriado ou fim de semana, a hora de saída é arredondada para baixo para a hora cheia.
-*   **Interface Atualizada:** A tabela de histórico agora exibe a coluna "Banco de Horas" com formatação de cor para fácil identificação.
+### Dashboard
 
-### v4.1 - Correção Definitiva de Sincronização de Dados
-*   **Diagnóstico:** Foi identificado que, ao atualizar um usuário, o nome era salvo corretamente no banco de dados **Firestore**, mas não era atualizado no perfil de **Autenticação do Firebase** (no campo `displayName`). A página `/admin` lia os dados da Autenticação, causando a exibição de dados desatualizados.
-*   **Solução:** A `server action` `updateUser` foi corrigida para atualizar o nome do usuário em ambos os locais: na Autenticação do Firebase, usando `auth.updateUser()`, e no Firestore. Isso garante a consistência total dos dados em toda a aplicação.
-*   **Desativação de Cache:** Para garantir que a lista de usuários esteja sempre 100% atualizada após uma alteração, as páginas que exibem dados sensíveis (como `/admin`) foram marcadas como totalmente dinâmicas, instruindo o servidor a nunca usar uma versão em cache.
+- **Página Principal (`/dashboard`):** Exibe informações relevantes para o usuário logado, como um relógio em tempo real, um cronômetro e atalhos para ações rápidas.
+- **Página de Administração (`/admin`):** Acessível apenas por usuários com a flag `isAdmin` como `true`. Permite a visualização e gerenciamento de todos os usuários.
 
----
+## Mudanças Realizadas (Sessão Atual)
 
-## Plano de Ação
+Nesta sessão, as seguintes alterações foram implementadas para corrigir o fluxo de autenticação e reintroduzir a funcionalidade de login com Google:
 
-(Nenhuma ação em andamento no momento)
+1.  **Refatoração do `LoginForm.tsx`:**
+    - Reintroduzido o botão e a lógica para **Login com Google** (`handleGoogleSignIn`).
+    - A função `handleSubmit` (para login com email/senha) foi modificada para usar `signInWithEmailAndPassword` do SDK do Firebase no cliente, em vez de enviar as credenciais diretamente para a API.
+    - Criada a função `handleAuthSuccess` para unificar a lógica pós-autenticação (envio do `idToken` para a API de sessão).
+
+2.  **Robustez da API de Sessão (`app/api/auth/session/route.ts`):**
+    - A rota `POST` foi aprimorada para aceitar o `idToken` tanto do **corpo da requisição** (`body.idToken`) quanto do **cabeçalho de autorização** (`Authorization: Bearer <token>`). Isso torna a API mais flexível e alinhada com as melhores práticas.
+
+3.  **Otimização da Página de Registro (`app/register/page.tsx`):**
+    - O código foi refatorado para usar uma função unificada `handleAuthSuccess` para lidar com o pós-registro (criação de usuário no Firestore e criação da sessão).
+    - A operação de escrita no Firestore agora usa a opção `{ merge: true }`, o que previne a sobrescrita acidental de dados caso o documento do usuário já exista.
+
+## Próximos Passos (Sugestões)
+
+- **Variáveis de Ambiente no Vercel:** Para que o deploy no Vercel funcione corretamente, as seguintes variáveis de ambiente precisam ser configuradas no painel do projeto no Vercel:
+  - `NEXT_PUBLIC_FIREBASE_API_KEY`
+  - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+  - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+  - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
+  - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
+  - `NEXT_PUBLIC_FIREBASE_APP_ID`
+  - `FIREBASE_PRIVATE_KEY`
+  - `FIREBASE_CLIENT_EMAIL`
+  - `FIREBASE_PROJECT_ID`
+
+- **Segurança do Firestore:** Revisar as regras de segurança do Firestore (`firestore.rules`) para garantir que apenas usuários autorizados possam ler e escrever dados.
+
+- **Feedback ao Usuário:** Melhorar o feedback visual durante o carregamento e em caso de erros, usando componentes como toasts ou spinners mais elaborados.

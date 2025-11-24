@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Mail, Lock } from 'lucide-react';
+import { getFirebaseClient } from '../lib/firebase';
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -13,32 +15,57 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
+  const handleAuthSuccess = async (idToken: string) => {
+    const response = await fetch('/api/auth/session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    if (response.ok) {
+      router.push('/dashboard');
+    } else {
+      const data = await response.json();
+      setError(data.message || 'Falha ao iniciar a sessão.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        // Autenticação bem-sucedida, redireciona para o dashboard
-        router.push('/dashboard');
+      const { auth } = getFirebaseClient();
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await userCredential.user.getIdToken();
+      await handleAuthSuccess(idToken);
+    } catch (error: any) {
+      console.error('Login error:', error);
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        setError('E-mail ou senha inválidos.');
       } else {
-        // Falha na autenticação, exibe a mensagem de erro da API
-        const data = await response.json();
-        setError(data.message || 'Falha no login. Verifique suas credenciais.');
+        setError('Ocorreu um erro ao tentar fazer login.');
       }
-    } catch (err) {
-      // Erro de rede ou outro problema inesperado
-      setError('Ocorreu um erro ao tentar conectar. Tente novamente.');
-      console.error('Login fetch error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { auth } = getFirebaseClient();
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const token = await result.user.getIdToken();
+      await handleAuthSuccess(token);
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      setError('Ocorreu um erro ao tentar fazer login com o Google.');
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +112,31 @@ export default function LoginForm() {
         </div>
       </form>
 
-      {/* A funcionalidade de login com Google foi removida pois não está mais implementada no backend */}
+      <div className="my-6 flex items-center">
+        <hr className="w-full border-zinc-700" />
+        <span className="px-4 text-zinc-400">OU</span>
+        <hr className="w-full border-zinc-700" />
+      </div>
+
+      <div>
+        <button
+          onClick={handleGoogleSignIn}
+          disabled={isLoading}
+          className="w-full flex items-center justify-center rounded-full bg-white px-4 py-3 text-base font-bold text-zinc-900 shadow-lg shadow-white/10 transition-all hover:scale-105 hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:opacity-50"
+        >
+          <Image src="/google-logo.svg" alt="Google" width={24} height={24} className="mr-3" />
+          Entrar com Google
+        </button>
+      </div>
+
+      <div className="mt-6 text-center">
+        <p className="text-zinc-400">
+          Não tem uma conta?{' '}
+          <button onClick={() => router.push('/register')} className="font-bold text-blue-500 hover:underline">
+            Registre-se
+          </button>
+        </p>
+      </div>
     </div>
   );
 }
