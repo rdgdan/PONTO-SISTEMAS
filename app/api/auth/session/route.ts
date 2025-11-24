@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { auth, db } from '@/lib/firebaseAdmin';
 import { DecodedIdToken } from 'firebase-admin/auth';
 
+// Função auxiliar para garantir que o usuário exista no Firestore.
 async function ensureUserInFirestore(decodedToken: DecodedIdToken) {
   const { uid, email, name } = decodedToken;
   const userDocRef = db.collection('users').doc(uid);
@@ -13,56 +14,63 @@ async function ensureUserInFirestore(decodedToken: DecodedIdToken) {
       uid,
       email,
       name: name || email?.split('@')[0] || 'Novo Usuário',
-      isAdmin: false, 
+      isAdmin: false,
       createdAt: new Date().toISOString(),
     });
   }
 }
 
+// Rota GET: Verifica a sessão do usuário a partir do cookie.
 export async function GET(request: Request) {
-  // ... (código GET existente sem alterações)
+  try {
+    const sessionCookie = cookies().get('__session')?.value;
+    if (!sessionCookie) {
+      return NextResponse.json({ error: 'Sessão não encontrada.' }, { status: 401 });
+    }
+
+    const decodedToken = await auth.verifySessionCookie(sessionCookie, true);
+    const userRecord = await auth.getUser(decodedToken.uid);
+    const userDoc = await db.collection('users').doc(decodedToken.uid).get();
+    const firestoreData = userDoc.exists ? userDoc.data() : {};
+
+    const finalUserData = {
+      uid: userRecord.uid,
+      email: userRecord.email,
+      name: userRecord.displayName || firestoreData?.name || 'Usuário',
+      isAdmin: userRecord.customClaims?.admin === true,
+    };
+
+    return NextResponse.json({ user: finalUserData }, { status: 200 });
+
+  } catch (error) {
+    console.error('[API /api/auth/session GET] Erro ao verificar sessão:', error);
+    // Limpa o cookie inválido se a verificação falhar.
+    cookies().delete('__session');
+    return NextResponse.json({ error: 'Sessão inválida ou expirada.' }, { status: 401 });
+  }
 }
 
+// Rota POST: Cria um cookie de sessão a partir de um ID token.
 export async function POST(request: Request) {
-  console.log('[API /api/auth/session POST] Início da requisição.');
-  let idToken: string | undefined;
-
-  const authorizationHeader = request.headers.get('Authorization');
-  if (authorizationHeader?.startsWith('Bearer ')) {
-    idToken = authorizationHeader.split('Bearer ')[1];
-    console.log('[API /api/auth/session POST] ID token extraído do cabeçalho Authorization.');
-  }
-
-  if (!idToken) {
-    try {
-      const body = await request.json();
-      idToken = body.idToken;
-      if (idToken) {
-        console.log('[API /api/auth/session POST] ID token extraído do corpo da requisição.');
-      } 
-    } catch (error) {
-        console.log('[API /api/auth/session POST] Corpo da requisição não é JSON ou está vazio. Ignorando.');
-    }
-  }
-
-  if (!idToken) {
-    console.error('[API /api/auth/session POST] ERRO: ID token não fornecido nem no cabeçalho, nem no corpo.');
-    return NextResponse.json({ error: 'ID token não fornecido' }, { status: 401 });
-  }
-
   try {
-    console.log('[API /api/auth/session POST] Tentando verificar o ID token com o Firebase Admin SDK...');
+    const authorization = request.headers.get('Authorization');
+    if (!authorization?.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Token de autorização não fornecido.' }, { status: 401 });
+    }
+    const idToken = authorization.split('Bearer ')[1];
+
+    // Verifica o ID token com o Firebase Admin SDK.
     const decodedToken = await auth.verifyIdToken(idToken);
-    console.log(`[API /api/auth/session POST] ID token verificado com sucesso para o UID: ${decodedToken.uid}`);
+    console.log(`[API POST] ID token verificado para: ${decodedToken.uid}`);
 
+    // Garante que os dados do usuário estejam no Firestore.
     await ensureUserInFirestore(decodedToken);
-    console.log(`[API /api/auth/session POST] Usuário ${decodedToken.uid} garantido no Firestore.`);
 
-    const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 dias
-    console.log('[API /api/auth/session POST] Criando o cookie de sessão...');
+    // Cria o cookie de sessão.
+    const expiresIn = 60 * 60 * 24 * 7 * 1000; // 7 dias
     const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });
-    console.log('[API /api/auth/session POST] Cookie de sessão criado com sucesso.');
 
+    // Configura o cookie na resposta.
     cookies().set('__session', sessionCookie, {
       maxAge: expiresIn,
       httpOnly: true,
@@ -70,25 +78,29 @@ export async function POST(request: Request) {
       path: '/',
       sameSite: 'lax',
     });
-    console.log('[API /api/auth/session POST] Cookie de sessão configurado no navegador.');
 
-    return NextResponse.json({ status: 'success' });
+    return NextResponse.json({ status: 'success' }, { status: 200 });
 
   } catch (error: any) {
-    // Log detalhado do erro de verificação
     console.error('-------------------------------------------------------------');
     console.error('--- [API /api/auth/session POST] ERRO CRÍTICO NA SESSÃO ---');
     console.error(`--- Mensagem: ${error.message}`);
     if (error.code) {
       console.error(`--- Código do Erro: ${error.code}`);
     }
-    console.error('--- CAUSA PROVÁVEL: Se o código for \'auth/argument-error\', pode indicar um problema com as variáveis de ambiente (FIREBASE_PRIVATE_KEY, etc.) no ambiente de produção (Vercel). Verifique se elas estão configuradas corretamente.');
+    console.error('--- CAUSA PROVÁVEL: Problema com as variáveis de ambiente do Firebase Admin (FIREBASE_PRIVATE_KEY) no ambiente de produção (Vercel).');
     console.error('-------------------------------------------------------------');
-    
-    return NextResponse.json({ error: 'Token inválido, expirado ou erro de configuração do servidor.', details: error.message }, { status: 401 });
+    return NextResponse.json({ error: 'Falha na autenticação do servidor.', details: error.message }, { status: 401 });
   }
 }
 
-export async function DELETE() {
-  // ... (código DELETE existente sem alterações)
+// Rota DELETE: Expira o cookie de sessão (logout).
+export async function DELETE(request: Request) {
+  try {
+    cookies().delete('__session');
+    return NextResponse.json({ status: 'success' }, { status: 200 });
+  } catch (error) {
+    console.error('[API /api/auth/session DELETE] Falha ao limpar sessão:', error);
+    return NextResponse.json({ error: 'Falha ao fazer logout.' }, { status: 500 });
+  }
 }

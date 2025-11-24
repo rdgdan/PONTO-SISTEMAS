@@ -27,26 +27,25 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Função unificada para lidar com o pós-autenticação
   const handleAuthSuccess = async (user: User) => {
     const { uid, displayName, email: userEmail } = user;
     const { db } = getFirebaseClient();
 
-    // 1. Cria ou atualiza o documento do usuário no Firestore
     await setDoc(doc(db, 'users', uid), {
       uid,
       email: userEmail,
       name: name || displayName || userEmail?.split('@')[0],
       isAdmin: false,
       createdAt: new Date().toISOString(),
-    }, { merge: true }); // Usar merge para segurança
+    }, { merge: true });
 
-    // 2. Obtém o ID token e cria a sessão no servidor
     const idToken = await user.getIdToken(true);
     const response = await fetch('/api/auth/session', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`,
+      },
     });
 
     if (!response.ok) {
