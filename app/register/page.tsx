@@ -114,19 +114,19 @@ export default function RegisterPage() {
              <div className="space-y-6">
                <div>
                  <label className="text-sm font-medium tracking-wide">Nome</label>
-                 <input value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="Seu nome" />
+                 <input value={name} onChange={(e) => setName(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="Seu nome" autoComplete="name" />
                </div>
                <div>
                  <label className="text-sm font-medium tracking-wide">E-mail</label>
-                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="seu@email.com" required disabled={loading} />
+                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="seu@email.com" required disabled={loading} autoComplete="email" />
                </div>
                <div>
                  <label className="text-sm font-medium tracking-wide">Senha</label>
-                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="********" required disabled={loading} />
+                 <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="********" required disabled={loading} autoComplete="new-password" />
                </div>
                <div>
                  <label className="text-sm font-medium tracking-wide">Confirmar Senha</label>
-                 <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="********" required disabled={loading} />
+                 <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="********" required disabled={loading} autoComplete="new-password" />
                </div>
              </div>
              {error && <div className="bg-red-500/20 border border-red-500/50 text-red-300 text-sm font-medium rounded-lg text-center p-3 mt-6">{error}</div>}

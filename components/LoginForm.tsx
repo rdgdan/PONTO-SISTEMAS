@@ -85,6 +85,7 @@ export default function LoginForm() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full rounded-full border border-zinc-700 bg-transparent py-3 pl-12 pr-4 text-white transition-colors placeholder:text-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             disabled={isLoading}
+            autoComplete="email"
           />
         </div>
         <div className="relative">
@@ -98,6 +99,7 @@ export default function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full rounded-full border border-zinc-700 bg-transparent py-3 pl-12 pr-4 text-white transition-colors placeholder:text-zinc-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             disabled={isLoading}
+            autoComplete="current-password"
           />
         </div>
         {error && <p className="text-sm text-red-400 text-center">{error}</p>}
