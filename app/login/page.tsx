@@ -1,7 +1,8 @@
-'use client';
+ 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 // CORREÇÃO: Importar a função getFirebaseClient em vez das constantes
 import { getFirebaseClient } from '@/lib/firebase';
@@ -118,6 +119,10 @@ export default function LoginPage() {
                     {loading ? 'Carregando...' : 'Entrar'}
                 </button>
             </form>
+            <div className="mt-4 text-center">
+              <span className="text-sm text-gray-400">Ainda não tem uma conta? </span>
+              <Link href="/register" className="text-sm font-medium text-purple-400 hover:underline ml-1">Registrar</Link>
+            </div>
             <div className="flex items-center justify-center space-x-2 my-6">
                 <span className="h-px w-full bg-gray-600/50"></span>
                 <span className="text-sm text-gray-400">OU</span>
