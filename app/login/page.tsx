@@ -29,8 +29,7 @@ const GoogleIcon = () => (
 );
 
 export default function LoginPage() {
-  // CORREÇÃO: Obter as instâncias do Firebase chamando a função no cliente
-  const { auth, db } = getFirebaseClient();
+  // Inicialização do Firebase feita sob demanda dentro dos handlers
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,6 +41,9 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    // Inicializa o client do Firebase apenas quando o usuário tenta logar
+    const { auth } = getFirebaseClient();
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -60,6 +62,8 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setError(null);
+    // Inicializa o client do Firebase apenas quando o usuário tenta logar com Google
+    const { auth, db } = getFirebaseClient();
     const provider = new GoogleAuthProvider();
 
     try {

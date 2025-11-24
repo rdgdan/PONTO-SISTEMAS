@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback, startTransition } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 // Interface que define a estrutura de dados do usuário
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error("Erro durante o logout:", error);
     } finally {
         setUser(null);
-        router.push('/login');
+      setTimeout(() => startTransition(() => router.push('/login')));
     }
   }, [router]);
 
@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 } else {
                     setUser(null);
                     // Se não estivermos na página de login e não houver usuário, redireciona.
-                    router.push('/login');
+                    setTimeout(() => startTransition(() => router.push('/login')));
                 }
             }
         } catch (error) {
@@ -79,7 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 console.error("Falha ao verificar a sessão:", error);
                 setUser(null);
                 if (pathname !== '/login') {
-                    router.push('/login');
+                        setTimeout(() => startTransition(() => router.push('/login')));
                 }
             }
         } finally {
