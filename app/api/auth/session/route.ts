@@ -7,6 +7,7 @@ export async function GET() {
   try {
     const sessionCookie = cookies().get('__session')?.value;
     if (!sessionCookie) {
+      console.warn('GET /api/auth/session: cookie __session não encontrado');
       return NextResponse.json({ error: 'Sessão não encontrada' }, { status: 401 });
     }
 
@@ -35,6 +36,11 @@ export async function GET() {
 
   } catch (error) {
     console.error("Erro na rota GET /api/auth/session:", error);
+    // Se for um erro de configuração do Admin SDK, retornamos 500 para indicar problema server-side
+    const message = (error as any)?.message || String(error);
+    if (message && /credential|credentials|initialize/i.test(message)) {
+      return NextResponse.json({ error: 'Erro do servidor ao validar sessão' }, { status: 500 });
+    }
     return NextResponse.json({ error: 'Sessão inválida ou expirada' }, { status: 401 });
   }
 }
@@ -79,6 +85,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ status: 'success' });
   } catch (error) {
     console.error('Falha ao criar sessão:', error);
+    const message = (error as any)?.message || String(error);
+    if (message && /credential|credentials|initialize/i.test(message)) {
+      return NextResponse.json({ error: 'Erro do servidor ao criar sessão' }, { status: 500 });
+    }
     return NextResponse.json({ error: 'Falha ao criar sessão' }, { status: 401 });
   }
 }

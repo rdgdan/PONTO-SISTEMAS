@@ -14,6 +14,14 @@ async function createSessionCookie(idToken: string): Promise<boolean> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ idToken }),
   });
+  if (!response.ok) {
+    try {
+      const body = await response.json();
+      console.warn('createSessionCookie falhou:', response.status, body);
+    } catch (e) {
+      console.warn('createSessionCookie falhou e não foi possível ler o corpo da resposta', response.status);
+    }
+  }
   return response.ok;
 }
 

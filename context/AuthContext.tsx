@@ -63,23 +63,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         try {
             const response = await fetch('/api/auth/session');
-            const sessionData = await response.json();
+          const sessionData = await response.json();
 
-            if (isMounted) {
-                if (response.ok && sessionData.user) {
-                    setUser(sessionData.user);
-                } else {
-                    setUser(null);
-                    // Se não estivermos na página de login e não houver usuário, redireciona.
-                    setTimeout(() => startTransition(() => router.push('/login')));
-                }
+          if (isMounted) {
+            if (response.ok && sessionData.user) {
+              setUser(sessionData.user);
+            } else {
+              console.warn('AuthContext: /api/auth/session respondeu:', response.status, sessionData);
+              setUser(null);
+              // Se não estivermos na página de login e não houver usuário, redireciona (pequeno atraso para evitar hydration issues).
+              setTimeout(() => startTransition(() => router.push('/login')), 60);
             }
+          }
         } catch (error) {
             if (isMounted) {
                 console.error("Falha ao verificar a sessão:", error);
                 setUser(null);
                 if (pathname !== '/login') {
-                        setTimeout(() => startTransition(() => router.push('/login')));
+                setTimeout(() => startTransition(() => router.push('/login')), 60);
                 }
             }
         } finally {
