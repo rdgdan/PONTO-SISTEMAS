@@ -1,0 +1,122 @@
+/* === GERAL ========================================== */
+.react-calendar {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  line-height: 1.5em;
+}
+
+/* === NAVEGAÇÃO ====================================== */
+.react-calendar__navigation {
+  display: flex;
+  height: 44px;
+  margin-bottom: 1em;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  border: none;
+  color: #a1a1aa; /* zinc-400 */
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #27272a; /* zinc-800 */
+}
+
+.react-calendar__navigation__label {
+  flex-grow: 1 !important;
+}
+
+/* === VISÃO DE MÊS =================================== */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.75em;
+  color: #71717a; /* zinc-500 */
+}
+
+.react-calendar__month-view__days__day {
+  color: #d4d4d8; /* zinc-300 */
+}
+
+.react-calendar__month-view__days__day--weekend {
+  color: #f87171; /* red-400 */
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #3f3f46; /* zinc-700 */
+}
+
+/* === ABBREVIAÇÕES DOS DIAS DA SEMANA ================ */
+abbr[title] {
+  text-decoration: none;
+}
+
+/* === BOTÕES DOS DIAS ================================ */
+.react-calendar__tile {
+  background: none;
+  text-align: center;
+  padding: 0.75em 0.5em;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.react-calendar__tile:disabled {
+  color: #3f3f46; /* zinc-700 */
+  cursor: not-allowed;
+}
+
+.react-calendar__tile:hover {
+  background-color: #27272a; /* zinc-800 */
+}
+
+/* === DIA ATIVO / SELECIONADO ======================== */
+.react-calendar__tile--active {
+  background-color: #3b82f6 !important; /* blue-600 */
+  color: white !important;
+  border: 2px solid #60a5fa; /* blue-400 */
+}
+
+/* === DIA DE HOJE ==================================== */
+.react-calendar__tile--now {
+  background: #3f3f46; /* zinc-700 */
+  font-weight: bold;
+}
+
+/* === MARCADORES CUSTOMIZADOS ======================== */
+.day-with-record .react-calendar__tile-content {
+  position: relative;
+}
+
+.day-with-record::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: #34d399; /* green-400 */
+  border-radius: 50%;
+}
+
+.holiday-marker::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background-color: #facc15; /* yellow-400 */
+  border-radius: 50%;
+}

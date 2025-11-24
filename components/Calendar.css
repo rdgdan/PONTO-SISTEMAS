@@ -1,0 +1,126 @@
+/* Estilização para o react-calendar - Tema Escuro Moderno */
+
+.react-calendar {
+  width: 100%;
+  max-width: 100%;
+  background: rgba(15, 23, 42, 0.5); /* bg-slate-900 com transparência */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 12px;
+  font-family: inherit;
+  line-height: 1.5;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* Navegação do Calendário (Setas e Mês/Ano) */
+.react-calendar__navigation {
+  display: flex;
+  height: 44px;
+  margin-bottom: 1em;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  border: none;
+  color: #a78bfa; /* violet-400 */
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.react-calendar__navigation button:hover,
+.react-calendar__navigation button:focus {
+  background-color: rgba(139, 92, 246, 0.1);
+}
+
+.react-calendar__navigation__label {
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: #e2e8f0; /* slate-200 */
+}
+
+/* Dias da Semana (Seg, Ter, etc.) */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 0.75em;
+  color: #94a3b8; /* slate-400 */
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
+}
+
+/* Botões de dia */
+.react-calendar__tile {
+  max-width: 100%;
+  padding: 0;
+  background: none;
+  border: none;
+  text-align: center;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.9em;
+  color: #cbd5e1; /* slate-300 */
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.react-calendar__tile:disabled {
+  color: #475569; /* slate-600 */
+  cursor: not-allowed;
+}
+
+.react-calendar__tile:not(:disabled):hover,
+.react-calendar__tile:not(:disabled):focus {
+  background-color: rgba(139, 92, 246, 0.2);
+}
+
+/* Dia Ativo (Selecionado) */
+.react-calendar__tile--active {
+  background-color: #8b5cf6; /* violet-500 */
+  color: white;
+  font-weight: bold;
+}
+
+.react-calendar__tile--active:not(:disabled):hover,
+.react-calendar__tile--active:not(:disabled):focus {
+  background-color: #a78bfa; /* violet-400 */
+}
+
+/* Dia de Hoje */
+.react-calendar__tile--now {
+  background-color: rgba(56, 189, 248, 0.1); /* sky-400 com transparência */
+  font-weight: bold;
+}
+
+.react-calendar__tile--now:not(:disabled):hover,
+.react-calendar__tile--now:not(:disabled):focus {
+  background-color: rgba(56, 189, 248, 0.2);
+}
+
+/* Estilo para feriados */
+.holiday-marker {
+  height: 6px;
+  width: 6px;
+  background-color: #f43f5e; /* rose-500 */
+  border-radius: 50%;
+  margin: 2px auto 0;
+}
+
+.holiday-name {
+  font-size: 0.65em;
+  color: #fda4af; /* rose-300 */
+  display: none; /* Oculto por padrão */
+}
+
+.react-calendar__tile:hover .holiday-name {
+  display: block; /* Mostra no hover */
+}
