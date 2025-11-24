@@ -2,8 +2,9 @@
 
  import { useState } from 'react';
  import { useRouter } from 'next/navigation';
- import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
- import { getFirebaseClient } from '@/lib/firebase';
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getFirebaseClient } from '@/lib/firebase';
+import Link from 'next/link';
  import { doc, setDoc } from 'firebase/firestore';
 
  // Reaproveitamos o estilo e estrutura do Login para manter a mesma aparência
@@ -116,7 +117,7 @@
            <p className="mt-2 text-lg">Crie sua conta e comece a usar.</p>
          </div>
          <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-700/50 shadow-2xl shadow-purple-500/10 rounded-2xl p-8 mt-10">
-           <form onSubmit={handleRegister}>
+          <form onSubmit={handleRegister}>
              <div className="space-y-6">
                <div>
                  <label className="text-sm font-medium tracking-wide">Nome</label>
@@ -139,7 +140,11 @@
              <button type="submit" className="w-full bg-purple-600 text-white font-bold tracking-wider rounded-lg py-3 mt-8 transition-all duration-300 ease-in-out transform hover:scale-105 hover:bg-purple-700 hover:shadow-xl hover:shadow-purple-600/40 active:scale-100 disabled:bg-gray-600 disabled:hover:scale-100 disabled:cursor-not-allowed" disabled={loading}>
                {loading ? 'Carregando...' : 'Registrar'}
              </button>
-           </form>
+            </form>
+            <div className="mt-4 text-center">
+              <span className="text-sm text-gray-400">Já tem uma conta? </span>
+              <Link href="/login" className="text-sm font-medium text-purple-400 hover:underline ml-1">Entrar</Link>
+            </div>
            <div className="flex items-center justify-center space-x-2 my-6">
              <span className="h-px w-full bg-gray-600/50"></span>
              <span className="text-sm text-gray-400">OU</span>
