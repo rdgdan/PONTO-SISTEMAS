@@ -7,11 +7,14 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 
 import { getFirebaseClient } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
+// CORRIGIDO: Envia o idToken no header Authorization, como o servidor espera.
 async function createSessionCookie(idToken: string): Promise<boolean> {
   const response = await fetch('/api/auth/session', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ idToken }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${idToken}`,
+    },
   });
   if (!response.ok) {
     try {
@@ -53,7 +56,6 @@ export default function LoginPage() {
       if (!sessionCreated) throw new Error('Falha ao criar a sessão no servidor.');
       router.push('/dashboard');
     } catch (error) {
-      // IMPRIMIR O ERRO REAL DO FIREBASE NO CONSOLE
       console.error('Erro de Autenticação do Firebase:', error);
       setError('E-mail ou senha inválidos. Por favor, tente novamente.');
       setLoading(false);
@@ -77,7 +79,6 @@ export default function LoginPage() {
       if (!sessionCreated) throw new Error('Falha ao criar a sessão do Google no servidor.');
       router.push('/dashboard');
     } catch (error) {
-      // IMPRIMIR O ERRO REAL DO FIREBASE NO CONSOLE
       console.error('Erro de Autenticação do Firebase (Google):', error);
       setError('Falha ao fazer login com o Google. Tente novamente.');
       setLoading(false);
