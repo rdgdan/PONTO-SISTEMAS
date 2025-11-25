@@ -1,66 +1,43 @@
-# Blueprint do Projeto PONTO-SISTEMAS
+
+# Blueprint: Aplicativo de Agendamento
 
 ## Visão Geral
 
-O PONTO-SISTEMAS é uma aplicação web construída com Next.js e Firebase, projetada para fornecer um sistema de ponto eletrônico para empresas. A aplicação permite que os funcionários registrem seus pontos de entrada e saída, e que os administradores gerenciem os registros e usuários.
+Uma aplicação web moderna e responsiva que permite aos usuários agendar horários. A interface principal apresenta um calendário interativo para seleção de datas, uma lista de horários disponíveis para o dia selecionado e uma etapa de confirmação para finalizar o agendamento.
 
-## Design e Estilo
+## Esboço do Projeto
 
-- **Framework UI:** Tailwind CSS
-- **Componentes:** Headless UI e componentes personalizados em `components/`
-- **Estilo Visual:** Moderno e limpo, com um tema escuro predominante (`bg-slate-950`). Usa gradientes e efeitos de blur para um visual mais sofisticado. Paleta de cores focada em roxo e azul.
-- **Responsividade:** O layout é projetado para ser responsivo e funcionar bem em dispositivos móveis e desktops.
+- **Framework**: Next.js (utilizando o App Router)
+- **Estilização**: Tailwind CSS com a fonte `geist` para uma aparência limpa e moderna.
+- **Componentes de UI**:
+    - **Ícones**: `lucide-react` para iconografia clara e consistente.
+    - **Calendário**: `react-calendar` como base para a seleção de datas.
+    - **Notificações**: `sonner` para toasts e alertas discretos.
+    - **Componentes Customizados**: Componentes criados para a seleção de horários e confirmação do agendamento.
 
-## Funcionalidades Implementadas
+### Funcionalidades Implementadas
 
-### Autenticação
+1.  **Seleção de Data**: O usuário pode navegar e selecionar um dia em um componente de calendário visual.
+2.  **Exibição de Horários**: Ao selecionar uma data, o sistema exibe uma lista de horários disponíveis para aquele dia específico.
+3.  **Confirmação de Agendamento**: Ao clicar em um horário, a interface muda para um estado de confirmação, mostrando claramente a data e a hora selecionadas e pedindo a confirmação final do usuário.
+4.  **Ação de Agendamento (Simulada)**: Um botão "Confirmar Agendamento" que, no estado atual, simula a conclusão do processo.
 
-- **Fluxo de Autenticação:** A autenticação é gerenciada pelo Firebase, usando um fluxo híbrido (cliente/servidor).
-  1. **Lado do Cliente (Client-side):** O login (email/senha e Google) e o registro acontecem no navegador usando o SDK do Firebase (`firebase/auth`).
-  2. **Geração de Token:** Após a autenticação bem-sucedida no cliente, um `idToken` do Firebase é gerado.
-  3. **Criação de Sessão (Server-side):** O `idToken` é enviado para a API do Next.js no endpoint `/api/auth/session`.
-  4. **Cookie de Sessão:** O servidor valida o `idToken` usando o Firebase Admin SDK, cria um cookie de sessão (`__session`) seguro e `HttpOnly`, e o armazena no navegador do usuário. Isso estabelece uma sessão persistente e segura.
-- **Provedores de Autenticação:**
-  - Email e Senha
-  - Google
-- **Gerenciamento de Usuários:**
-  - Os dados dos usuários (UID, email, nome, `isAdmin`) são armazenados na coleção `users` do Firestore.
-  - A criação de novos usuários no Firestore acontece automaticamente no primeiro login.
+### Design e Layout
 
-### Dashboard
+- **Estrutura**: Layout de duas colunas em telas maiores, que se adapta para uma única coluna em dispositivos móveis.
+    - A coluna da esquerda contém o calendário.
+    - A coluna da direita exibe dinamicamente os horários disponíveis ou o painel de confirmação.
+- **Estilo Visual**: A interface utiliza o conceito de "cards" com sombras suaves para dar uma sensação de profundidade e organização. A paleta de cores é limpa e a tipografia é projetada para máxima legibilidade.
+- **Responsividade**: O design é totalmente responsivo, garantindo uma experiência de usuário consistente em desktops, tablets e smartphones.
 
-- **Página Principal (`/dashboard`):** Exibe informações relevantes para o usuário logado, como um relógio em tempo real, um cronômetro e atalhos para ações rápidas.
-- **Página de Administração (`/admin`):** Acessível apenas por usuários com a flag `isAdmin` como `true`. Permite a visualização e gerenciamento de todos os usuários.
+## Última Requisição: Correção de Vulnerabilidades
 
-## Mudanças Realizadas (Sessão Atual)
-
-Nesta sessão, as seguintes alterações foram implementadas para corrigir o fluxo de autenticação e reintroduzir a funcionalidade de login com Google:
-
-1.  **Refatoração do `LoginForm.tsx`:**
-    - Reintroduzido o botão e a lógica para **Login com Google** (`handleGoogleSignIn`).
-    - A função `handleSubmit` (para login com email/senha) foi modificada para usar `signInWithEmailAndPassword` do SDK do Firebase no cliente, em vez de enviar as credenciais diretamente para a API.
-    - Criada a função `handleAuthSuccess` para unificar a lógica pós-autenticação (envio do `idToken` para a API de sessão).
-
-2.  **Robustez da API de Sessão (`app/api/auth/session/route.ts`):**
-    - A rota `POST` foi aprimorada para aceitar o `idToken` tanto do **corpo da requisição** (`body.idToken`) quanto do **cabeçalho de autorização** (`Authorization: Bearer <token>`). Isso torna a API mais flexível e alinhada com as melhores práticas.
-
-3.  **Otimização da Página de Registro (`app/register/page.tsx`):**
-    - O código foi refatorado para usar uma função unificada `handleAuthSuccess` para lidar com o pós-registro (criação de usuário no Firestore e criação da sessão).
-    - A operação de escrita no Firestore agora usa a opção `{ merge: true }`, o que previne a sobrescrita acidental de dados caso o documento do usuário já exista.
-
-## Próximos Passos (Sugestões)
-
-- **Variáveis de Ambiente no Vercel:** Para que o deploy no Vercel funcione corretamente, as seguintes variáveis de ambiente precisam ser configuradas no painel do projeto no Vercel:
-  - `NEXT_PUBLIC_FIREBASE_API_KEY`
-  - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
-  - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
-  - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
-  - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
-  - `NEXT_PUBLIC_FIREBASE_APP_ID`
-  - `FIREBASE_PRIVATE_KEY`
-  - `FIREBASE_CLIENT_EMAIL`
-  - `FIREBASE_PROJECT_ID`
-
-- **Segurança do Firestore:** Revisar as regras de segurança do Firestore (`firestore.rules`) para garantir que apenas usuários autorizados possam ler e escrever dados.
-
-- **Feedback ao Usuário:** Melhorar o feedback visual durante o carregamento e em caso de erros, usando componentes como toasts ou spinners mais elaborados.
+- **Objetivo**: Identificar e corrigir vulnerabilidades de segurança críticas e altas reportadas pelo `npm audit`.
+- **Plano de Ação Executado**:
+    1.  **Análise Inicial**: Executamos `npm audit` e identificamos múltiplas vulnerabilidades, principalmente nos pacotes `next` e `glob` (uma dependência do `eslint-config-next`).
+    2.  **Resolução de Conflitos**: O processo de correção automática (`npm audit fix --force`) introduziu conflitos de versão entre `eslint` e `eslint-config-next`. Isso exigiu uma série de passos para estabilizar o projeto:
+        - Revertemos o `package.json` para um estado estável conhecido.
+        - Reinstalamos as dependências do zero com `npm install`.
+    3.  **Correção Definitiva**: Com uma base estável, executamos `npm audit fix --force` novamente. Isso resolveu as vulnerabilidades, atualizando os pacotes `next` e `eslint-config-next` para versões seguras.
+    4.  **Sincronização Final**: Para resolver o conflito de versão final introduzido pela correção, atualizamos o `eslint` para a versão `^9.0.0` no `package.json` e executamos `npm install` pela última vez.
+- **Resultado**: Todas as vulnerabilidades de segurança foram resolvidas com sucesso e as dependências do projeto estão agora sincronizadas e estáveis.

@@ -1,0 +1,68 @@
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[debug] [2025-11-25T12:23:15.123Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-25T12:23:15.124Z] > authorizing via signed-in user (danspda1@gmail.com)
+[debug] [2025-11-25T12:23:15.134Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.135Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.145Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.145Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.145Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.146Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.146Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-25T12:23:15.146Z] > authorizing via signed-in user (danspda1@gmail.com)
+[debug] [2025-11-25T12:23:15.148Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-25T12:23:15.148Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/ponto-sistemas
+[debug] [2025-11-25T12:23:15.150Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-11-25T12:23:15.150Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/ponto-sistemas
+[debug] [2025-11-25T12:23:15.152Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseio.com [none]
+[debug] [2025-11-25T12:23:15.152Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseio.com x-goog-quota-user=projects/ponto-sistemas
+[debug] [2025-11-25T12:23:15.155Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.155Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.157Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.157Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.158Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.158Z] Checked if tokens are valid: true, expires at: 1764076186966
+[debug] [2025-11-25T12:23:15.158Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebasedataconnect.googleapis.com [none]
+[debug] [2025-11-25T12:23:15.158Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebasedataconnect.googleapis.com x-goog-quota-user=projects/ponto-sistemas
+[debug] [2025-11-25T12:23:15.159Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseapphosting.googleapis.com [none]
+[debug] [2025-11-25T12:23:15.159Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseapphosting.googleapis.com x-goog-quota-user=projects/ponto-sistemas
+[debug] [2025-11-25T12:23:15.160Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseio.com [none]
+[debug] [2025-11-25T12:23:15.161Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseio.com x-goog-quota-user=projects/ponto-sistemas
+[debug] [2025-11-25T12:23:15.298Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseio.com 403
+[debug] [2025-11-25T12:23:15.299Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseio.com [omitted]
+[debug] [2025-11-25T12:23:15.311Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseio.com 403
+[debug] [2025-11-25T12:23:15.311Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseio.com [omitted]
+[debug] [2025-11-25T12:23:15.340Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-11-25T12:23:15.340Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-11-25T12:23:15.340Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-11-25T12:23:15.340Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebasedataconnect.googleapis.com [omitted]
+[debug] [2025-11-25T12:23:15.347Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseapphosting.googleapis.com 200
+[debug] [2025-11-25T12:23:15.347Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebaseapphosting.googleapis.com [omitted]
+[debug] [2025-11-25T12:23:15.353Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebasedataconnect.googleapis.com 200
+[debug] [2025-11-25T12:23:15.354Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/ponto-sistemas/services/firebasedataconnect.googleapis.com [omitted]
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[debug] [2025-11-25T12:23:15.370Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-25T12:23:15.370Z] > authorizing via signed-in user (danspda1@gmail.com)
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[debug] [2025-11-25T12:23:15.380Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-25T12:23:15.380Z] > authorizing via signed-in user (danspda1@gmail.com)
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[debug] [2025-11-25T12:23:15.419Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-25T12:23:15.420Z] > authorizing via signed-in user (danspda1@gmail.com)
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[debug] [2025-11-25T12:23:15.424Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-25T12:23:15.424Z] > authorizing via signed-in user (danspda1@gmail.com)
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[debug] [2025-11-25T12:23:15.451Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-25T12:23:15.451Z] > authorizing via signed-in user (danspda1@gmail.com)
+[error] Failed to fetch Firebase Project from Studio Workspace because WORKSPACE_SLUG environment variable is empty
+[debug] [2025-11-25T12:23:15.459Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-11-25T12:23:15.460Z] > authorizing via signed-in user (danspda1@gmail.com)
