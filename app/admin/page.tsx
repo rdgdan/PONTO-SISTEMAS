@@ -21,6 +21,8 @@ export interface User {
   isAdmin: boolean;
 }
 
+// Trigger redeploy
+
 // Função assíncrona para buscar todos os usuários do Firebase Auth
 async function getUsers(): Promise<User[]> {
   const userRecords = await auth.listUsers();
