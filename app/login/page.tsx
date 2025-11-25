@@ -1,14 +1,12 @@
- 'use client';
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-// CORREÇÃO: Importar a função getFirebaseClient em vez das constantes
 import { getFirebaseClient } from '@/lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-// Ação para criar o cookie de sessão do lado do servidor
 async function createSessionCookie(idToken: string): Promise<boolean> {
   const response = await fetch('/api/auth/session', {
     method: 'POST',
@@ -26,7 +24,6 @@ async function createSessionCookie(idToken: string): Promise<boolean> {
   return response.ok;
 }
 
-// Componente para o ícone do Google
 const GoogleIcon = () => (
     <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -38,8 +35,6 @@ const GoogleIcon = () => (
 );
 
 export default function LoginPage() {
-  // Inicialização do Firebase feita sob demanda dentro dos handlers
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -50,19 +45,16 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
-    // Inicializa o client do Firebase apenas quando o usuário tenta logar
     const { auth } = getFirebaseClient();
-
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken(true);
       const sessionCreated = await createSessionCookie(idToken);
-
       if (!sessionCreated) throw new Error('Falha ao criar a sessão no servidor.');
-
       router.push('/dashboard');
     } catch (error) {
+      // IMPRIMIR O ERRO REAL DO FIREBASE NO CONSOLE
+      console.error('Erro de Autenticação do Firebase:', error);
       setError('E-mail ou senha inválidos. Por favor, tente novamente.');
       setLoading(false);
     }
@@ -71,10 +63,8 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setError(null);
-    // Inicializa o client do Firebase apenas quando o usuário tenta logar com Google
     const { auth, db } = getFirebaseClient();
     const provider = new GoogleAuthProvider();
-
     try {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken(true);
@@ -87,6 +77,8 @@ export default function LoginPage() {
       if (!sessionCreated) throw new Error('Falha ao criar a sessão do Google no servidor.');
       router.push('/dashboard');
     } catch (error) {
+      // IMPRIMIR O ERRO REAL DO FIREBASE NO CONSOLE
+      console.error('Erro de Autenticação do Firebase (Google):', error);
       setError('Falha ao fazer login com o Google. Tente novamente.');
       setLoading(false);
     }
@@ -107,11 +99,11 @@ export default function LoginPage() {
                 <div className="space-y-6">
                     <div>
                         <label className="text-sm font-medium tracking-wide">E-mail</label>
-                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="seu@email.com" required disabled={loading} />
+                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="seu@email.com" required disabled={loading} autoComplete="email" />
                     </div>
                     <div>
                         <label className="text-sm font-medium tracking-wide">Senha</label>
-                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="********" required disabled={loading} />
+                        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-gray-700/50 border-2 border-gray-600/50 rounded-lg px-4 py-3 mt-2 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300" placeholder="********" required disabled={loading} autoComplete="current-password" />
                     </div>
                 </div>
                 {error && <div className="bg-red-500/20 border border-red-500/50 text-red-300 text-sm font-medium rounded-lg text-center p-3 mt-6">{error}</div>}
