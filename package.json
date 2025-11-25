@@ -12,6 +12,7 @@
     "@headlessui/react": "^2.2.9",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/react-calendar": "^3.9.0",
+    "@vercel/speed-insights": "^1.2.0",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "firebase": "^12.6.0",
